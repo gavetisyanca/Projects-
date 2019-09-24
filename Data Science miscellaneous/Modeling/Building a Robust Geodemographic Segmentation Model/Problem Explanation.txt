@@ -1,0 +1,4 @@
+The Bank noticed unusual turn rates (customers leaving). So bank is trying to figure out whats going 
+on and trying to address the problem
+So... We have to find out and tell the customer which geographical segmentation (group of customers, type)  is leaving the bank
+

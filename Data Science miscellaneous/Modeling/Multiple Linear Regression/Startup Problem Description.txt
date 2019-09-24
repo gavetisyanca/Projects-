@@ -1,0 +1,11 @@
+Venture Capitalist Company is interested in Investing in startup that has higher chances to yield better 
+profits in the long run
+
+
+We have:
+E - Dependent Variable;
+A-D are Independent Variables;
+
+Find:
+WHICH OF THESE SPENDS (INDEP. VAR.) will YEALD BETTER PROFIT ? In other words, How do independent variables (A-D columns) 
+affect dependent one (Column E) ? 
