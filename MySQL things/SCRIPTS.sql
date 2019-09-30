@@ -198,3 +198,68 @@ INSERT INTO employees
 VALUES 
 ("LEondra", "Morales", 45);
 
+
+# CONCATENATING STRINGS
+
+
+
+SELECT author_fname AS first, author_lname AS last, 
+  CONCAT(author_fname, ' ', author_lname) AS full
+FROM books;
+# output: author_fname author_lname (space between them  ' ') 
+ 
+SELECT author_fname AS first, author_lname AS last, 
+  CONCAT(author_fname, ', ', author_lname) AS full
+FROM books;
+ 
+SELECT CONCAT(title, '-', author_fname, '-', author_lname) FROM books;
+ 
+SELECT 
+    CONCAT_WS(' - ', title, author_fname, author_lname) 
+FROM books; # INSERT ' - ' between arguments that are passed(title, author_fname, author_lname)
+# SUBSTRING CAN PRINT SOME PART OF THE STRING rather than the whole thing 
+SELECT SUBSTR(title, 1, 10) AS 'short title' FROM books;
+# 1, 10 means starting from the 1sr index - 10th index
+
+SELECT CONCAT
+    (
+        SUBSTRING(title, 1, 10),
+        '...'
+    ) AS 'short title'
+FROM books;
+
+
+# REPLACE  replaces value to another one ex 
+
+SELECT REPLACE("Hello World", "Hell", "!$@%");
+# OUTPUT - !$@%o World
+
+SELECT
+    SUBSTRING(REPLACE(title, 'e', '3'), 1, 10) AS 'weird string'
+FROM books;
+# REVERSE 
+SELECT REVERSE(author_lname) FROM BOOKS;
+# CHAR_LENGTH -counts number of carachters in a string
+SELECT author_lname, CHAR_LENGTH(author_lname) AS LENGTH FROM books;
+# UPPER(), LOWER() changing the case of a string
+SELECT UPPER('Hello World');
+SELECT CONCAT('MY FAVORITE BOOK IS ', LOWER(title)) FROM books;
+
+# UPPER only takes one argument and CONCAT takes two or 
+# more arguments, so they can't be switched in that way. for ex:
+# YOU CANNOT DO THIS: 
+SELECT CONCAT(UPPER(author_fname, ' ', author_lname)) AS "full name in caps" 
+FROM books;
+# BUT YOU CAN DO THIS INSTEAD BY PASSING TO UPPER() only 1 argument
+SELECT UPPER(CONCAT(author_fname, ' ', author_lname)) AS "full name in caps"
+FROM books;
+
+SELECT REVERSE(UPPER("Why does my cat looks at me with such hatred "));
+SELECT REPLACE(CONCAT('I',' ', 'like', ' ', 'cats'), ' ', '-');
+SELECT REPLACE(title,' ', '->') AS 'title' FROM BOOKS;
+SELECT author_lname AS FORWARD, REVERSE(author_lname) AS REVERSE FROM BOOKS;
+SELECT CONCAT(title, ' was released in ', released_year) AS BLURP FROM BOOKS;
+SELECT title AS TITUL, CHAR_LENGTH(title) AS length FROM BOOKS;
+SELECT CONCAT(SUBSTRING(title, 1, 10),'...') AS 'SHORT TITLE', 
+CONCAT(author_fname, ' ', author_lname) AS 'AUTHOR',
+CONCAT(stock_quantity, ' in stock ') AS 'quantity' FROM BOOKS;
