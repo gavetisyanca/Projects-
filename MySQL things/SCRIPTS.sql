@@ -263,3 +263,206 @@ SELECT title AS TITUL, CHAR_LENGTH(title) AS length FROM BOOKS;
 SELECT CONCAT(SUBSTRING(title, 1, 10),'...') AS 'SHORT TITLE', 
 CONCAT(author_fname, ' ', author_lname) AS 'AUTHOR',
 CONCAT(stock_quantity, ' in stock ') AS 'quantity' FROM BOOKS;
+
+
+-- DISCTINCT VALUE(gives Unique value )
+SELECT DISTINCT author_lname FROM BOOKS;
+ 
+SELECT DISTINCT author_lname FROM books;
+
+SELECT DISTINCT CONCAT(author_fname,' ', author_lname) FROM books;
+ 
+SELECT DISTINCT author_fname, author_lname FROM books;
+# ORDER BY (orders the data)
+SELECT author_lname FROM books ORDER BY author_lname;
+SELECT author_lname FROM books ORDER BY author_lname DESC;
+SELECT author_lname, title
+FROM books ORDER BY 2;
+SELECT author_fname, author_lname FROM books 
+ORDER BY author_lname, author_fname;
+
+# LIMIT (limits number of output) usually used with order by 
+SELECT title FROM BOOKS LIMIT 4;
+SELECT title, released_year FROM BOOKS ORDER BY released_year DESC LIMIT 5;
+SELECT title, released_year 
+FROM BOOKS ORDER BY released_year 
+DESC LIMIT 5, 10; # 5 is the start point, 10 is number of rows 
+# Like search terms 
+SELECT title, author_fname FROM books WHERE author_fname LIKE '%da%';
+-- searches something (word) that has 'da' in it. dowsn't matter 
+-- in the beginning or at the end  
+SELECT title, author_fname FROM books WHERE author_fname LIKE 'da%';
+-- searches something (word) that starts with 'da'
+SELECT title, stock_quantity FROM books WHERE stock_quantity LIKE '____';
+-- searches number of characters - '_' - means 1 character 
+(235)234-0987 LIKE '(___)___-____';
+SELECT title FROM books WHERE title LIKE '%\%%' -- SEARCHES '%'
+ 
+SELECT title FROM books WHERE title LIKE '%\_%' -- SEARCHES '_'
+
+SELECT CONCAT(UPPER('MY FAVOURISTE AUTHOR IS'),' ', UPPER(AUTHOR_LNAME),'!')
+AS 'YELL' FROM BOOKS ORDER BY author_lname;
+
+# COUNT 
+SELECT COUNT(*) FROM BOOKS; # counts every existing row
+SELECT COUNT(DISTINCT author_fname, author_lname) FROM BOOKS;
+SELECT COUNT(*) FROM BOOKS WHERE title LIKE '%the%';
+
+
+# GROUP BY 
+SELECT author_fname, author_lname, COUNT(*) FROM books GROUP BY author_lname;
+ 
+SELECT author_fname, author_lname, COUNT(*) FROM books GROUP BY author_lname, author_fname;
+ 
+SELECT released_year FROM books;
+ 
+SELECT released_year, COUNT(*) FROM books GROUP BY released_year;
+ 
+SELECT CONCAT('In ', released_year, ' ', COUNT(*), ' book(s) released') AS year FROM books GROUP BY released_year;
+# MIN and MAX
+SELECT MIN(released_year) FROM BOOKS;
+SELECT MAX(pages) FROM BOOKS;
+# SUBQUERIES
+SELECT title, pages FROM books 
+WHERE pages = (SELECT Min(pages) 
+                FROM books); 
+# shorter and faster way the same thing 
+SELECT * FROM books 
+ORDER BY pages ASC LIMIT 1;
+
+# MIN/MAX in conjunction with GROUP BY
+SELECT author_fname, author_lname, MIN(released_year) FROM BOOKS 
+GROUP BY author_fname, author_lname;
+
+# FANCY SOLUTION USING ALIASES
+SELECT
+  CONCAT(author_fname, ' ', author_lname) AS author,
+  MAX(pages) AS 'longest book'
+FROM books
+GROUP BY author_lname,
+         author_fname;
+
+# SUM FUNCTION 
+SELECT SUM(pages) FROM BOOKS;
+SELECT author_fname, author_lname, SUM(pages) FROM BOOKS GROUP BY author_lname, author_fname; 
+# AVG - average FUNCTION 
+
+SELECT title, AVG(stock_quantity), released_year FROM BOOKS GROUP BY released_year 
+# EXERCISES
+SELECT COUNT(title) FROM BOOKS;
+SELECT COUNT(title), released_year FROM BOOKS GROUP BY released_year;
+SELECT author_lname, author_fname, AVG(released_year) FROM BOOKS GROUP BY author_lname, author_fname;
+SELECT CONCAT(author_fname, ' ', author_lname) AS 'full name' FROM BOOKS
+WHERE pages = (SELECT MAX(pages) FROM BOOKS);
+SELECT author_lname, author_fname FROM BOOKS ORDER BY pages ASC LIMIT 1;
+SELECT released_year AS 'year', COUNT(title) AS '# book(s)', AVG(pages) AS 'average pages' FROM BOOKS 
+GROUP BY released_year ORDER BY released_year;
+
+
+# ------------------------------------------DATA TYPES-----------------------------------------
+
+# VARCHAR vs CHAR
+
+# CHAR has only fixed characters, whereas VARCHAR is NOT FIXED CHAR is faster than VARCHAR 
+# CHAR lengths - (0 - 255) characters  Example of char can be used let's say State Abbreviation
+# 2 characters (NY, CA, FL ...) YES/NO flags, SEX....
+
+# NUMBERS 
+# DECIMAL(m, n) m - total number of digits, n - number of digits after decimal for ex: DECIMAL(5,2) 
+# can stroe 5 digit long number including numbers after decimal point. 2 represents number of digits after
+# decimal point for ex. 444.56 
+
+# (FLOATs and DOUBLES) vs DECIMAls(difference):
+# decimals are more precise than flaots and doubles. However, floats and boubles occupy less space than decimals 
+# floats - precise up to 7 digits, double is up to 15. SO if you need to be very pricise, use DECIMAL
+
+
+# DATE, TIME and DATETIME
+
+# 'DATE' - YYYY-MM-DD 
+# 'TIME' - HH-MM-SS
+# 'DATETIME' - YYYY-MM-DD HH-MM-SS
+
+CREATE TABLE people (name VARCHAR(100), birthdate DATE, birthtime TIME, birthdt DATETIME);
+ 
+INSERT INTO people (name, birthdate, birthtime, birthdt)
+VALUES('Padma', '1983-11-11', '10:07:35', '1983-11-11 10:07:35');
+ 
+INSERT INTO people (name, birthdate, birthtime, birthdt)
+VALUES('Larry', '1943-12-25', '04:10:42', '1943-12-25 04:10:42');
+
+INSERT INTO people (name, birthdate, birthtime, birthdt)
+VALUES('Toaster', CURDATE(), CURTIME(), NOW());
+
+
+# FORMATTING DATES ! 
+
+SELECT name, birthdate, DAY(birthdate) FROM people;
+ 
+SELECT name, birthdate, DAYNAME(birthdate) FROM people;
+ 
+SELECT name, birthdate, DAYOFWEEK(birthdate) FROM people;
+ 
+SELECT name, birthdate, DAYOFYEAR(birthdate) FROM people;
+
+SELECT CONCAT(MONTHNAME(birthdate), ' ', DAY(birthdate), ' ', YEAR(birthdate)) FROM people; # not as good as 
+# using DATE_FORMAT()
+ 
+SELECT DATE_FORMAT(birthdt, 'Was born on a %W') FROM people;
+ 
+SELECT DATE_FORMAT(birthdt, '%m/%d/%Y') FROM people;
+ 
+SELECT DATE_FORMAT(birthdt, '%m/%d/%Y at %h:%i') FROM people;
+
+SELECT * FROM people;
+# DATEDIFF()
+ 
+SELECT DATEDIFF(NOW(), birthdate) FROM people;
+ 
+SELECT name, birthdate, DATEDIFF(NOW(), birthdate) FROM people;
+ 
+SELECT birthdt FROM people;
+ 
+SELECT birthdt, DATE_ADD(birthdt, INTERVAL 1 MONTH) FROM people;
+ 
+SELECT birthdt, DATE_ADD(birthdt, INTERVAL 10 SECOND) FROM people;
+ 
+SELECT birthdt, DATE_ADD(birthdt, INTERVAL 3 QUARTER) FROM people;
+ 
+SELECT birthdt, birthdt + INTERVAL 1 MONTH FROM people;
+ 
+SELECT birthdt, birthdt - INTERVAL 5 MONTH FROM people;
+ 
+SELECT birthdt, birthdt + INTERVAL 15 MONTH + INTERVAL 10 HOUR FROM people;
+
+
+# TIMESTAMPS !!! ITS basically metadata about 'when was certain thing was created (table or row) in sql case'
+# Withing sql format TIMESTAMP is also a DATA TYPE 
+# TIMESTAMPS are almost the same as DATETIME with some exceptions:
+# TIMESTAMP stores dates between the range of 1970 - 2038 
+# DATETIME can have range from 1000 - 9999 .Thats why its smart to use TIMESTAMP when we are talking about 
+# date and time when something was created . some record in database. thats why you don't need to go that far 
+# also TIMESTAMP occupy waaaay less space in memory than DATETIME 
+
+CREATE TABLE comments (content VARCHAR(100), created_at TIMESTAMP DEFAULT NOW());
+
+INSERT INTO comments (content) VALUES ("what a silly look!!");
+INSERT INTO comments (content) VALUES ("lol you are awesome, man!");
+
+# This table is set to update timestamp everytime the comments get changed 
+CREATE TABLE comments2 (content VARCHAR(100), 
+						created_at TIMESTAMP DEFAULT NOW() ON UPDATE CURRENT_TIMESTAMP);
+
+INSERT INTO comments2 (content) VALUES ("asfjashfjksaf!");
+
+UPDATE comments2 SET content='THIS IS NOT GIBBERISH' WHERE content='asfjashfjksaf!';
+
+SELECT DATE_FORMAT(CURDATE(), '%W');
+SELECT DATE_FORMAT(CURDATE(), '%w');
+SELECT DATE_FORMAT(CURDATE(), '%m/%d/%Y');
+SELECT DATE_FORMAT(NOW(), '%M %D at %h:%i');
+
+CREATE TABLE tweets (tweet VARCHAR(120),
+					username VARCHAR(20),
+			created_at TIMESTAMP DEFAULT NOW() ON UPDATE CURRENT_TIMESTAMP);
+INSERT INTO tweets(username, tweet) VALUES('ROMANOS', 'HEYEFADF IAHAVE FUN TONIGHT'); 
